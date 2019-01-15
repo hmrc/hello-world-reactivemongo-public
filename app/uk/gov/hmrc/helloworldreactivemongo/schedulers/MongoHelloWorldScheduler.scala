@@ -22,8 +22,8 @@ class MongoHelloWorldScheduler @Inject()(service: HelloWorldService, actorSystem
   logger.info(s"Initialising update every $interval")
 
   actorSystem.scheduler.schedule(FiniteDuration(1, TimeUnit.SECONDS), interval) {
-    logger.info("Scheduling a mongo counter")
-    service.addObjectAndCountAll()
+    logger.info("Scheduling a mongo counter..")
+    service.addObjectAndCountAll().recover{case e ⇒ logger.error("failed", e)}
   }
 
 }
