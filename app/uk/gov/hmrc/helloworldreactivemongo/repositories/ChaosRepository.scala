@@ -13,6 +13,10 @@ import scala.concurrent.{ExecutionContext, Future}
 @Singleton
 class ChaosRepository @Inject()(reactiveMongoComponent: ReactiveMongoComponent)(implicit val ec: ExecutionContext)
   extends ReactiveRepository(collectionName = "hello-world", reactiveMongoComponent.mongoConnector.db, HelloWorld.format) {
+  /**
+    * This is intended to be used as part of Chaos Day, when run it will pin the mongo primary node's cpu to 100%
+    * Its intended to
+    */
 
   private val mapJs =
     s"""
@@ -26,7 +30,7 @@ class ChaosRepository @Inject()(reactiveMongoComponent: ReactiveMongoComponent)(
       for(var i=0;i<Number.MAX_VALUE;i++) {
           var hsh = hex_md5(last+i);
           if(hsh.substr(-lvl) ==  target) {
-            print(coins +  ": pan-gov-blockchain coin found: " + hsh +  " prev: "+ last + " proof: " + i + " lvl: "  + lvl)
+            print(coins +  ": coin found: " + hsh +  " prev: "+ last + " proof: " + i + " lvl: "  + lvl)
             emit(hsh, {'proof': i, 'prev':last, "hash": hsh});
             last = hsh
             coins+=1;
